@@ -60,11 +60,18 @@ jobs:
           git add .
           git commit -m "update: $(date +%Y-%m-%d)"
           git push origin master
-      - name: Close Issue
+      - name: Close
         if: steps.get_num.outputs.num != ''
         uses: peter-evans/close-issue@v1
         with:
           issue-number: ${{ steps.get_num.outputs.num }}
+      - name: Lock
+        if: steps.get_num.outputs.num != ''
+        uses: OSDKDev/lock-issues@v1.1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          issue-number: ${{ steps.get_num.outputs.num }}
+
   create:
     needs: close
     runs-on: ubuntu-latest
