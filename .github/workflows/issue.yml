@@ -11,7 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Check secrets is set
-        run: [ -z "${{ secrets.GH_MYTOKEN }}" ] && exit 1
+        run: |
+          if [ -z "${{ secrets.GH_MYTOKEN }}" ]; then
+            exit 1
+          fi
   close:
     needs: check
     env:
