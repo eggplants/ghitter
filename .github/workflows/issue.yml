@@ -27,7 +27,12 @@ jobs:
         run: |
           echo -n '::set-output name=num::'
           curl -s "https://api.github.com/repos/${{ github.repository }}/issues" |
-            jq '.[]|select(.user.login == "'"${{ github.repository_owner }}"'" and .state == "open").number' > _.txt
+            jq '
+              .[]|select(
+                .user.login == "'"${{ github.repository_owner }}"'" and
+                .state == "open" and
+                .labels[0].name == "Twitter"
+              ).number' > _.txt
           n="$(wc -l < _.txt)"
           if [ -z "$n" ]; then
             exit 1
@@ -85,5 +90,5 @@ jobs:
           # - generate PAT (with only `public_repo` or `repo` if needed)
           # - set it to `secrets.GH_MYTOKEN`
           curl -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
-               -d '{"title":"'"$(date +%Y-%m-%d)"'","body":""}' \
+               -d '{"title":"'"$(date +%Y-%m-%d)"'","body":"","labels":["Twitter"]}' \
                "https://api.github.com/repos/${{ github.repository }}/issues"
