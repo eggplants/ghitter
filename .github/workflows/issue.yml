@@ -116,9 +116,12 @@ jobs:
       - name: Lock
         if: steps.get_num.outputs.num != ''
         run: |
-          curl -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/lock" \
-            -d '{"lock_reason":"resolved"}'
+          curl \
+            -X PUT \
+            -H 'Accept: application/vnd.github.v3+json' \
+            -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
+            -d '{"lock_reason":"resolved"}' \
+            "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/lock"
 
   create:
     needs: close
