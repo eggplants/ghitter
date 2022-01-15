@@ -29,23 +29,20 @@ jobs:
         id: get_num
         run: |
           echo -n '::set-output name=num::'
-          curl -s "https://api.github.com/repos/${{ github.repository }}/issues" |
-            jq '
-              .[]|select(
-                .user.login == "'"${{ github.repository_owner }}"'" and
-                .state == "open" and
-                .labels[0].name == "Twitter"
-              ).number' > _.txt
-          n="$(wc -l < _.txt)"
+          n="$(
+            curl -s "https://api.github.com/repos/${{ github.repository }}/issues" |
+              jq '
+                .[]|select(
+                  .user.login == "'"${{ github.repository_owner }}"'" and
+                  .state == "open" and
+                  .labels[0].name == "Twitter"
+                ).number
+              '
+          )"
           if [ -z "$n" ]; then
             exit 1
-          elif [ "$n" -gt 1 ]; then
-            exit 1
-          elif [ "$n" -gt 1 ]; then
-            : # pass
           else
-            cat _.txt
-            rm _.txt
+            echo "$n"
           fi
       - name: Archive
         if: steps.get_num.outputs.num != ''
