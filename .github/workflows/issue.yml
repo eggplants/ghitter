@@ -30,7 +30,9 @@ jobs:
         run: |
           echo -n '::set-output name=num::'
           n="$(
-            curl -s "https://api.github.com/repos/${{ github.repository }}/issues" |
+            curl -s \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/${{ github.repository }}/issues" |
               jq '
                 .[]|select(
                   .user.login == "'"${{ github.repository_owner }}"'" and
@@ -50,14 +52,18 @@ jobs:
           mkdir -p "archives/csv/$(date +%Y -d-1day)/$(date +%m -d-1day)"
           {
             echo "user,updated_at,body,url"
-            curl -s "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}" |
+            curl -s \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}" |
               jq -r '
                 [
                   .user.login, .updated_at, .body,
                   ([.html_url, "#issue-", (.id|tostring)]|add)
                 ]|@csv
               '
-            curl -s "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/comments" |
+            curl -s \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/comments" |
               jq -r '
                 .[]|[
                   .user.login, .updated_at, .body,
@@ -69,7 +75,9 @@ jobs:
             echo -e "# $(date +%Y-%m-%d -d-1day)\n"
             echo "<https://github.com/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}>"
             echo -e "\n---\n"
-            curl -s "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}" |
+            curl -s \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}" |
               jq -r '
                 [
                   .body, "",
@@ -82,7 +90,9 @@ jobs:
                 ]|join("\n")
               '
               echo -e "\n---\n"
-            curl -s "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/comments" |
+            curl -s \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/comments" |
               jq -r '
                 map(
                   [
@@ -113,7 +123,7 @@ jobs:
       - name: Lock
         if: steps.get_num.outputs.num != ''
         run: |
-          curl \
+          curl -s \
             -X PUT \
             -H 'Accept: application/vnd.github.v3+json' \
             -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
@@ -129,6 +139,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create
         run: |
-          curl -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
-               -d '{"title":"'"$(date +%Y-%m-%d)"'","body":"","labels":["Twitter"]}' \
-               "https://api.github.com/repos/${{ github.repository }}/issues"
+          curl -s \
+            -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
+            -d '{"title":"'"$(date +%Y-%m-%d)"'","body":"","labels":["Twitter"]}' \
+            "https://api.github.com/repos/${{ github.repository }}/issues"
