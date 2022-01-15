@@ -52,11 +52,20 @@ jobs:
         run: |
           mkdir -p "archives/csv/$(date +%Y -d-1day)/$(date +%m -d-1day)"
           {
-            echo "user,updated_at,body"
+            echo "user,updated_at,body,url"
             curl -s "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}" |
-              jq -r '[.user.login, .updated_at, .body]|@csv'
+              jq -r '
+                [
+                  .user.login, .updated_at, .body,
+                  ([html_url, "#issue-", (.id|tostring)]|add)
+                ]|@csv
+              '
             curl -s "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/comments" |
-              jq -r '.[]|[.user.login, .updated_at, .body]|@csv'
+              jq -r '
+                .[]|[
+                  .user.login, .updated_at, .body,
+                  .html_url
+                ]|@csv'
           } > "archives/csv/$(date +%Y -d-1day)/$(date +%m -d-1day)/$(date +%Y-%m-%d -d-1day).csv"
           mkdir -p "archives/md/$(date +%Y -d-1day)/$(date +%m -d-1day)"
           {
@@ -64,11 +73,31 @@ jobs:
             echo "<https://github.com/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}>"
             echo -e "\n---\n"
             curl -s "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}" |
-              jq -r '[.body, "", (["@", .user.login, ", *updated at: ", .updated_at, "*"]|add)]|join("\n")'
+              jq -r '
+                [
+                  .body, "",
+                  (
+                    [
+                      "[@", .user.login, "](", .user.html_url, "), ",
+                      "*updated at: [", .updated_at, "](", .html_url, "#issue-", (.id|tostring), ")*"
+                    ]|add
+                  )
+                ]|join("\n")
+              '
               echo -e "\n---\n"
             curl -s "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/comments" |
-              jq -r 'map([.body, "", (["@", .user.login, ", *updated at: ", .updated_at, "*"]|add)]|join("\n"))|join("\n\n---\n\n")'
-          } > "archives/md/$(date +%Y -d-1day)/$(date +%m -d-1day)/$(date +%Y-%m-%d -d-1day).md"
+              jq -r '
+                map(
+                  [
+                    .body, "",
+                    ([
+                      "[@", .user.login, "](", .user.html_url, "), ",
+                      "*updated at: [", .updated_at, "](", .html_url, ")*"
+                    ]|add)
+                  ]|join("\n")
+                )|join("\n\n---\n\n")
+              '
+            } > "archives/md/$(date +%Y -d-1day)/$(date +%m -d-1day)/$(date +%Y-%m-%d -d-1day).md"
       - name: Commit
         if: steps.get_num.outputs.num != ''
         run: |
