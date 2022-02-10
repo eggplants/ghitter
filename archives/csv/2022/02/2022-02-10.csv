@@ -1,0 +1,47 @@
+user,updated_at,body,url
+"eggplants","2022-02-10T07:20:21Z","![_](https://github.githubassets.com/images/mona-loading-default.gif)","https://github.com/eggplants/ghitter/issues/31#issue-1128669979"
+"eggplants","2022-02-09T19:24:19Z","キスケ　タコピー","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034113323"
+"eggplants","2022-02-09T19:33:20Z","[Amazon Musicのポッドキャスト番組「任意の視点Ｐ（品田遊）」<br>![thumb](https://d5fx445wy2wpk.cloudfront.net/icons/amznMusic_favicon.png)](https://music.amazon.co.jp/podcasts/e1527c19-ee80-4a0e-95a9-80ca85a2d473/%E4%BB%BB%E6%84%8F%E3%81%AE%E8%A6%96%E7%82%B9%EF%BD%90%EF%BC%88%E5%93%81%E7%94%B0%E9%81%8A%EF%BC%89)","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034120778"
+"eggplants","2022-02-09T19:33:48Z","promptにした
+
+```javascript
+javascript:(()=>{let ogp=document.querySelector('meta[property=""og:image""]');let ico=document.querySelector(""link[rel=icon]"");let src=ogp!==null?ogp.content:ico!==null?ico.href:null;prompt("""",src===null?`[${document.title}](${window.location})`:`[${document.title}<br>![thumb](${src})](${window.location})`)})();
+```","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034121143"
+"eggplants","2022-02-09T19:36:42Z","右が正しいとも左が正しいとも言えるにゃ","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034123382"
+"eggplants","2022-02-09T19:41:42Z","
+https://user-images.githubusercontent.com/42153744/153277756-5bfd5df3-dbc6-41af-9aba-107a7abfe0ef.mp4
+
+","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034127265"
+"eggplants","2022-02-09T19:49:07Z","https://user-images.githubusercontent.com/42153744/153278896-67e4f384-8846-4d8d-a504-19a55151d3e1.mp4","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034133082"
+"eggplants","2022-02-09T20:00:34Z","https://support.github.com/ticket/personal/0/1497281","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034142159"
+"eggplants","2022-02-09T20:23:05Z","[Steam：Survival Quiz CITY<br>![thumb](https://cdn.akamai.steamstatic.com/steam/apps/1466930/capsule_616x353.jpg?t=1643621811)](https://store.steampowered.com/app/1466930/Survival_Quiz_CITY/)","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034159374"
+"eggplants","2022-02-09T20:24:11Z","これおもいだした
+[強迫的な秩序についてのカエル（永迫 志乃）/ anti-chaos (Shiho NAGASAKO)<br>![thumb](https://img.youtube.com/vi/AsVLHrIk854/0.jpg)](http://youtu.be/AsVLHrIk854)","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034160211"
+"eggplants","2022-02-09T21:34:05Z","貧乏ゆすりみたいな人生","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034212987"
+"eggplants","2022-02-09T22:10:59Z","<img width=""839"" alt=""image"" src=""https://user-images.githubusercontent.com/42153744/153298714-864098d4-9c59-453e-8c60-ffa1371c73fe.png"">
+","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034240870"
+"eggplants","2022-02-09T22:12:15Z","`canvas[class=""g-box-full sceneLayer waveformCommentsNode loaded""]`","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034241892"
+"eggplants","2022-02-09T22:52:32Z","```
+document.querySelectorAll(""iframe"").forEach(e=>e.remove())
+document.querySelectorAll(`[id^=""stick""]`).forEach(e=>e.remove())
+document.querySelectorAll(`div[class=""top-content""]>div:nth-child(1)`).forEach(e=>e.remove())
+document.querySelectorAll(`body>div>div.content>div:nth-child(1)`).forEach(e=>e.remove())
+```","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034280789"
+"eggplants","2022-02-10T01:00:37Z","`document.querySelectorAll('a[href^=""http://jump.5ch.net/?""]').forEach(e=>e.href=e.href.slice(21))`","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034372503"
+"eggplants","2022-02-10T03:41:01Z","```
+Wordle 236 6/6
+
+🟨⬛🟩⬛⬛
+⬛⬛⬛🟨⬛
+🟨⬛🟩⬛🟩
+⬛⬛🟩🟩🟩
+⬛⬛🟩🟩🟩
+🟩🟩🟩🟩🟩
+```","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034460764"
+"eggplants","2022-02-10T07:20:21Z","[あのさ…俺そろそろバイクなんだよね.mp1 - ニコニコ動画<br>![thumb](https://img.cdn.nimg.jp/s/nicovideo/thumbnails/33230939/33230939.original/r1280x720l?key=9219e03ae05a7f3d64745abd5c8d5694e7a01ad2092ad35fee773dbb70d3d79b)](https://www.nicovideo.jp/watch/sm33230939)
+
+---
+
+```
+javascript:(()=>{let j=JSON.parse(document.querySelector('[id=""js-initial-watch-data""]').getAttribute(""data-api-data""));prompt("""",`[${document.title}<br>![thumb](${j.video.thumbnail.ogp})](${window.location})`)})();
+```","https://github.com/eggplants/ghitter/issues/31#issuecomment-1034573734"
