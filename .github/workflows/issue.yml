@@ -89,7 +89,6 @@ jobs:
                   )
                 ]|join("\n")
               '
-              echo -e "\n---\n"
             curl -s \
               -H "Accept: application/vnd.github.v3+json" \
               "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/comments" |
@@ -103,8 +102,12 @@ jobs:
                     ]|add)
                   ]|join("\n")
                 )|join("\n\n---\n\n")
-              '
-            } > "archives/md/$(date +%Y -d-1day)/$(date +%m -d-1day)/$(date +%Y-%m-%d -d-1day).md"
+              ' > _
+            if [ -n "$(sed '/^$/d' _)" ]; then
+              echo -e "\n---\n"
+              cat _
+            fi
+          } > "archives/md/$(date +%Y -d-1day)/$(date +%m -d-1day)/$(date +%Y-%m-%d -d-1day).md"
       - name: Commit
         if: steps.get_num.outputs.num != ''
         run: |
