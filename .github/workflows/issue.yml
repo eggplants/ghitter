@@ -107,6 +107,7 @@ jobs:
               echo -e "\n---\n"
               cat _
             fi
+            rm _
           } > "archives/md/$(date +%Y -d-1day)/$(date +%m -d-1day)/$(date +%Y-%m-%d -d-1day).md"
       - name: Commit
         if: steps.get_num.outputs.num != ''
