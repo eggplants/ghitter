@@ -121,9 +121,13 @@ jobs:
           git push origin master
       - name: Close
         if: steps.get_num.outputs.num != ''
-        uses: peter-evans/close-issue@v1
-        with:
-          issue-number: "${{ steps.get_num.outputs.num }}"
+        run: |
+         curl -s \
+           -X PATCH \
+           -H 'Accept: application/vnd.github.v3+json' \
+           -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
+           -d '{"state":"closed"}' \
+           "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}"
       - name: Lock
         if: steps.get_num.outputs.num != ''
         run: |
