@@ -1,0 +1,7 @@
+user,updated_at,body,url
+"eggplants","2022-03-13T14:42:04Z","![_](https://github.githubassets.com/images/mona-loading-default.gif)","https://github.com/eggplants/ghitter/issues/62#issue-1167314579"
+"eggplants","2022-03-13T14:26:21Z",">The env var way would be the same way as using tokens with pypirc which iirc is username = _token_ and password = $actualToken so you'd set the env var for user name to ""_token_"" and use the password env var to pass the token
+
+https://github.com/pypa/twine
+/issues/615#issuecomment-624817822","https://github.com/eggplants/ghitter/issues/62#issuecomment-1066113494"
+"eggplants","2022-03-13T14:42:04Z","𠇉","https://github.com/eggplants/ghitter/issues/62#issuecomment-1066116428"
