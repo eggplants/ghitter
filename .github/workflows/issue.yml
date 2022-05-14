@@ -121,22 +121,69 @@ jobs:
           git push origin master
       - name: Close
         if: steps.get_num.outputs.num != ''
-        run: |
-         curl -s \
-           -X PATCH \
-           -H 'Accept: application/vnd.github.v3+json' \
-           -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
-           -d '{"state":"closed"}' \
-           "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}"
-      - name: Lock
-        if: steps.get_num.outputs.num != ''
-        run: |
-          curl -s \
-            -X PUT \
-            -H 'Accept: application/vnd.github.v3+json' \
-            -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
-            -d '{"lock_reason":"resolved"}' \
-            "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/lock"
+        uses: actions/github-script@v5
+        with:
+          result-encoding: string
+          github-token: ${{ secrets.GH_MYTOKEN }}
+          script: |
+            const q_result = await github.graphql(`
+                    query {
+                      search(
+                        type: ISSUE
+                        query: "label:Twitter is:open repo:${{ github.repository }} author:${{ github.repository_owner }}"
+                        last: 1
+                      ) {
+                        nodes {
+                          ... on Issue {
+                            id
+                            number
+                          }
+                        }
+                      }
+                    }
+                  `);
+
+            if (q_result || q_result.data.search.nodes.length !== 1 || q_result.data.search.nodes[0].number !== ${{ steps.get_num.outputs.num }}) {
+              return "";
+            }
+            const issueId = q_result.data.search.nodes[0].id;
+
+            const m_result = await github.graphql(
+              `
+                      mutation($issueId: ID!) {
+                        deleteIssue(input: {issueId: $issueId}) {
+                          clientMutationId
+                        }
+                      }
+                    `,
+              {
+                issueId: issueId,
+                headers: {
+                  "GraphQL-Features": "projects_next_graphql",
+                },
+              }
+            );
+            if (m_result && m_result.deleteIssue) {
+              return m_result.deleteIssue.clientMutationId;
+            }
+            return "";
+
+#         run: |
+#          curl -s \
+#            -X PATCH \
+#            -H 'Accept: application/vnd.github.v3+json' \
+#            -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
+#            -d '{"state":"closed"}' \
+#            "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}"
+#       - name: Lock
+#         if: steps.get_num.outputs.num != ''
+#         run: |
+#           curl -s \
+#             -X PUT \
+#             -H 'Accept: application/vnd.github.v3+json' \
+#             -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
+#             -d '{"lock_reason":"resolved"}' \
+#             "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/lock"
 
   create:
     needs: close
