@@ -170,27 +170,12 @@ jobs:
               }
             );
             if (m_result && m_result.deleteIssue) {
-              return m_result.deleteIssue.clientMutationId;
+              console.log(m_result.deleteIssue.clientMutationId);
+              process.exit(0);
+            } else {
+              console.log("cannot delete issue");
+              process.exit(1);
             }
-            console.log("cannot delete issue");
-            process.exit(1);
-
-#         run: |
-#          curl -s \
-#            -X PATCH \
-#            -H 'Accept: application/vnd.github.v3+json' \
-#            -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
-#            -d '{"state":"closed"}' \
-#            "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}"
-#       - name: Lock
-#         if: steps.get_num.outputs.num != ''
-#         run: |
-#           curl -s \
-#             -X PUT \
-#             -H 'Accept: application/vnd.github.v3+json' \
-#             -u "${{ github.repository_owner }}":"${{ secrets.GH_MYTOKEN }}" \
-#             -d '{"lock_reason":"resolved"}' \
-#             "https://api.github.com/repos/${{ github.repository }}/issues/${{ steps.get_num.outputs.num }}/lock"
 
   create:
     needs: close
