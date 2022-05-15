@@ -117,14 +117,17 @@ jobs:
           git remote set-url origin "https://${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
           git checkout master
           git add .
-          git commit -m "update: $(date +%Y-%m-%d)"
-          git push origin master
+          if git commit -m "update: $(date +%Y-%m-%d)"; then
+            git push origin master
+          fi
+          :
       - name: Close
         if: steps.get_num.outputs.num != ''
         uses: actions/github-script@v5
         with:
           result-encoding: string
           github-token: ${{ secrets.GH_MYTOKEN }}
+          debug: true
           script: |
             const q_result = await github.graphql(`
                     query {
@@ -142,11 +145,14 @@ jobs:
                       }
                     }
                   `);
-
-            if (q_result || q_result.data.search.nodes.length !== 1 || q_result.data.search.nodes[0].number !== ${{ steps.get_num.outputs.num }}) {
-              return "";
+            if (
+              q_result.search.nodes.length !== 1 ||
+              q_result.search.nodes[0].number !== ${{ steps.get_num.outputs.num }}
+            ) {
+              console.log("cannot fetch data of target issue");
+              process.exit(1);
             }
-            const issueId = q_result.data.search.nodes[0].id;
+            const issueId = q_result.search.nodes[0].id;
 
             const m_result = await github.graphql(
               `
@@ -166,7 +172,8 @@ jobs:
             if (m_result && m_result.deleteIssue) {
               return m_result.deleteIssue.clientMutationId;
             }
-            return "";
+            console.log("cannot delete issue");
+            process.exit(1);
 
 #         run: |
 #          curl -s \
