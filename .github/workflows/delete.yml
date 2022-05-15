@@ -1,0 +1,52 @@
+name: Delete all issues
+on:
+  workflow_dispatch:
+
+jobs:
+  delete:
+    env:
+      TZ: 'Asia/Tokyo'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Close
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          github-token: ${{ secrets.GH_MYTOKEN }}
+          debug: true
+          script: |
+            const q_result = await github.graphql(`
+              query {
+                search(
+                  type: ISSUE
+                  last: 100
+                  query: "label:Twitter is:closed repo:${{ github.repository }} author:${{ github.repository_owner }}"
+                ) {
+                  nodes {
+                    ... on Issue {
+                      id
+                      number
+                    }
+                  }
+                }
+              }
+            `);
+            q_result.search.nodes.map((node) => {
+              console.log(`del: ${node.id}`)
+              github.graphql(
+                `
+                  mutation($issueId: ID!) {
+                    deleteIssue(input: {issueId: $issueId}) {
+                      clientMutationId
+                    }
+                  }
+                `,
+                {
+                  issueId: node.id,
+                  headers: {
+                    "GraphQL-Features": "projects_next_graphql",
+                  },
+                }
+              );
+            });
